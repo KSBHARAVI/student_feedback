@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "mongoose": "^4.1.1",
     "should": "^7.0.2",
+    "superagent": "^1.2.0",
+    "superagent-bluebird-promise": "^2.0.2",
     "uuid": "^2.0.1"
   }
 }
