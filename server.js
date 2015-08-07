@@ -13,12 +13,15 @@ app.get('/', function(req, res) {
   res.send(uuid.v4());
 });
 
-app.get('/feedback/:id', function(req, res) {
-  res.send('This will be a form page');
-});
+//retrieve feedback
+var retrieveFeedback = require('./route_handlers/retrieveFeedback');
+app.get('/feedback/:id', retrieveFeedback);
 
+//submit feedback
 var processFeedback = require('./route_handlers/processFeedback');
 app.post('/feedback/', processFeedback);
+
+//get a form to create you
 
 var server = app.listen(port, function(server) {
   console.log('Node server started, listening on: ', port);
