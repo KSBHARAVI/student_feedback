@@ -21,7 +21,9 @@ app.get('/feedback/:id', retrieveFeedback);
 var processFeedback = require('./route_handlers/processFeedback');
 app.post('/feedback/', processFeedback);
 
-//get a form to create you
+//creat a class
+var createClass = require('./route_handlers/createClass');
+app.post('/class', createClass);
 
 var server = app.listen(port, function(server) {
   console.log('Node server started, listening on: ', port);

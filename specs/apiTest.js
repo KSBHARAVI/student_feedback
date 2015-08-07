@@ -5,7 +5,7 @@ var db = require('../db');
 var request = require('superagent-bluebird-promise');
 
 describe('api', function() {
-  describe('/feedback/:id', function() {
+  describe('/feedback', function() {
     it('should POST a user submission', function(done) {
       var testFeedback = new db.Feedback();
       var test = Promise.coroutine(function* (testFeedback) {
@@ -20,7 +20,7 @@ describe('api', function() {
           .send({rating: 5})
           .send({comment: 'Hello!'})
           .promise();
-        submissionResult.text.should.equal('Form submitted!');
+        submissionResult.text.should.equal('Feedback submitted!');
 
         //make sure inserted feedback is correct
         var processedFeedback = yield db.Feedback.findOne({_id: insertResult.id});
@@ -49,5 +49,50 @@ describe('api', function() {
       });
       test();
     });
+  });
+
+  describe('/class', function() {
+    it('should POST a class', function() {
+      var testClass = {
+        name: 'Test class name',
+        description: 'This is a dope close',
+        students: [{name: 'Richie', email: 'richie@gmail.com'}],
+        monday: true,
+        tuesday: false,
+        wednesday: true,
+        thursday: false,
+        friday: true,
+        saturday: false,
+        sunday: false,
+        feedbackTime: 50000
+      };
+
+      var test = Promise.coroutine(function* (testClass) {
+        //user submission
+        var submissionResult = yield request.post(config.SERVER_ADDRESS + '/class')
+          .type('form')
+          .send(testClass)
+          .promise();
+
+        //make sure inserted Class is correct
+        var processedClass = yield db.Class.findOne({_id: submissionResult.body.classId});
+        processedClass.name.should.equal(testClass.name);
+        processedClass.description.should.equal(testClass.description);
+        processedClass.monday.should.equal(testClass.monday);
+        processedClass.tuesday.should.equal(testClass.tuesday);
+        processedClass.wednesday.should.equal(testClass.wednesday);
+        processedClass.thursday.should.equal(testClass.thursday);
+        processedClass.friday.should.equal(testClass.friday);
+        processedClass.saturday.should.equal(testClass.saturday);
+        processedClass.sunday.should.equal(testClass.sunday);
+        processedClass.feedbackTime.should.equal(testClass.feedbackTime);
+        processedClass.students.should.eql(testClass.students);
+
+        //remove test Class
+        yield db.Class.remove({_id: submissionResult.id});
+        done();
+      });
+      test(testClass);
+    });      
   });
 });

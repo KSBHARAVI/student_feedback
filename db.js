@@ -6,14 +6,18 @@ Promise.promisifyAll(mongoose);
 mongoose.connect(config.MONGO_ADDRESS);
 
 //not tied back to student, data is anonymous right now
+//also define required fields
 var feedbackSchema = mongoose.Schema({
   rating: {type: Number, max:5, min: 1},
   comment: {type: String, maxLength: 500}
 });
 
+//need to validate the size of the array and the type of data in it
+//also need to determine required fields
 var classSchema = mongoose.Schema({
   name: {type: String, maxLength: 100},
   description: {type: String, maxLength:500},
+  students: {type: Array},
   monday: {type: Boolean},
   tuesday: {type: Boolean},
   wednesday: {type: Boolean},
@@ -21,6 +25,7 @@ var classSchema = mongoose.Schema({
   friday: {type: Boolean},
   saturday: {type: Boolean},
   sunday: {type: Boolean},
+  //number of seconds from 00:00
   feedbackTime: {type: Number, max:86400}
 });
 
