@@ -45,6 +45,9 @@ describe('api', function() {
         var feedbackResponse = yield request.get(address).promise();
         feedbackResponse.body.data.rating.should.equal(5);
         feedbackResponse.body.data.comment.should.equal('Hello!');
+
+        //delete test data when done
+        yield testFeedback.remove();
         done();
       });
       test();
@@ -52,7 +55,7 @@ describe('api', function() {
   });
 
   describe('/class', function() {
-    it('should POST a class', function() {
+    it('should POST a class', function(done) {
       var testClass = {
         name: 'Test class name',
         description: 'This is a dope close',
@@ -86,13 +89,51 @@ describe('api', function() {
         processedClass.saturday.should.equal(testClass.saturday);
         processedClass.sunday.should.equal(testClass.sunday);
         processedClass.feedbackTime.should.equal(testClass.feedbackTime);
-        processedClass.students.should.eql(testClass.students);
+        processedClass.students[0].should.eql(testClass.students[0]);
 
         //remove test Class
-        yield db.Class.remove({_id: submissionResult.id});
+        yield db.Class.remove({_id: submissionResult.body.classId});
         done();
       });
       test(testClass);
+    });
+
+    it('should GET a class', function(done) {
+      var testClass = new db.Class({
+        name: 'Test class name',
+        description: 'This is a dope close',
+        students: [{name: 'Richie', email: 'richie@gmail.com'}],
+        monday: true,
+        tuesday: false,
+        wednesday: true,
+        thursday: false,
+        friday: true,
+        saturday: false,
+        sunday: false,
+        feedbackTime: 50000
+      });
+
+      var test = Promise.coroutine(function* () {
+        var insertResult = yield testClass.save();
+        var address = config.SERVER_ADDRESS + '/class/' + insertResult._id;
+        var classResponse = yield request.get(address).promise();
+        classResponse.body.data.name.should.equal(testClass.name);
+        classResponse.body.data.description.should.equal(testClass.description);
+        classResponse.body.data.monday.should.equal(testClass.monday);
+        classResponse.body.data.tuesday.should.equal(testClass.tuesday);
+        classResponse.body.data.wednesday.should.equal(testClass.wednesday);
+        classResponse.body.data.thursday.should.equal(testClass.thursday);
+        classResponse.body.data.friday.should.equal(testClass.friday);
+        classResponse.body.data.saturday.should.equal(testClass.saturday);
+        classResponse.body.data.sunday.should.equal(testClass.sunday);
+        classResponse.body.data.feedbackTime.should.equal(testClass.feedbackTime);
+        classResponse.body.data.students[0].should.eql(testClass.students[0]);
+        
+        //remove test Class
+        yield db.Class.remove({_id: insertResult._id});
+        done();
+      });
+      test();
     });      
   });
 });

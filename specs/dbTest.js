@@ -6,7 +6,7 @@ describe('database', function() {
   describe('feedback', function() {
     // this test was just to make sure I was using mongo right and that the coroutine pattern worked
     // Could this file to validate database schemas though
-    it('should inserted feedback into the database', function(done) {
+    it('should insert feedback into the database', function(done) {
       var testFeedback = new db.Feedback({rating: 3, comment: 'Yo!'});
       var test = Promise.coroutine(function* (testFeedback) {
         var insertResult = yield testFeedback.save();

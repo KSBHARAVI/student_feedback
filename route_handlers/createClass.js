@@ -8,7 +8,6 @@ var createClass = function(req, res) {
   var createClass = Promise.coroutine(function* (classData) {
     var newClass = new db.Class(classData);
     var createdClass = yield newClass.save();
-    console.log(createdClass);
     //change this a json response when there is a singlepage front-end
     res.status(200).send({success: true, classId: createdClass.id});
   });

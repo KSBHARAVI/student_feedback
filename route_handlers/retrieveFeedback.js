@@ -3,7 +3,6 @@ var Promise = require('bluebird');
 
 var retrieveFeedback = function(req, res) {
   var formId = req.params.id;
-  var formData = req.body;
 
   var retrieveFeedbackRoutine = Promise.coroutine(function* (formId) {
     var retrievedFeedback = yield db.Feedback.find({_id: formId});

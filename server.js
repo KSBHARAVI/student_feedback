@@ -21,9 +21,13 @@ app.get('/feedback/:id', retrieveFeedback);
 var processFeedback = require('./route_handlers/processFeedback');
 app.post('/feedback/', processFeedback);
 
-//creat a class
+//create a class
 var createClass = require('./route_handlers/createClass');
 app.post('/class', createClass);
+
+//retrieve a class
+var getClass = require('./route_handlers/getClass');
+app.get('/class/:id', getClass);
 
 var server = app.listen(port, function(server) {
   console.log('Node server started, listening on: ', port);
